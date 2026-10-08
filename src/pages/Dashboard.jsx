@@ -1,14 +1,33 @@
 import { useState } from "react";
-import { CATEGORIES } from "../interfaces/task.js";
+import { CATEGORIES, XP_BY_PRIORITY } from "../interfaces/task.js";
 import TaskForm from "../components/TaskForm.jsx";
 import TaskCard from "../components/TaskCard.jsx";
 import ProgressPanel from "../components/ProgressPanel.jsx";
+import WeeklyProgress from "../components/WeeklyProgress.jsx";
+import GoalStreakPanel from "../components/GoalStreakPanel.jsx";
+import AchievementPanel from "../components/AchievementPanel.jsx";
 import useLocalStorage from "../hooks/useLocalStorage.js";
 
 function Dashboard() {
   const [tasks, setTasks] = useLocalStorage(
     "lifequest-tasks",
     []
+  );
+  const [completionEvents, setCompletionEvents] = useLocalStorage(
+    "lifequest-completions",
+    tasks
+      .filter((task) => task.completed && task.completedAt)
+      .map((task) => ({
+        id: `legacy-${task.id}`,
+        taskId: task.id,
+        title: task.title,
+        xp: XP_BY_PRIORITY[task.priority] ?? 0,
+        completedAt: task.completedAt,
+      }))
+  );
+  const [dailyGoal, setDailyGoal] = useLocalStorage(
+    "lifequest-daily-goal",
+    3
   );
 
   const [editingTask, setEditingTask] = useState(null);
@@ -45,6 +64,32 @@ function Dashboard() {
 
   // Görev tamamlama
   function toggleTask(id) {
+    const taskToComplete = tasks.find((task) => task.id === id);
+    const today = new Date().toDateString();
+
+    if (taskToComplete && !taskToComplete.completed) {
+      const alreadyLoggedToday = completionEvents.some(
+        (event) =>
+          event.taskId === taskToComplete.id &&
+          new Date(event.completedAt).toDateString() === today
+      );
+
+      if (!alreadyLoggedToday) {
+        const completionEvent = {
+          id: crypto.randomUUID(),
+          taskId: taskToComplete.id,
+          title: taskToComplete.title,
+          xp: XP_BY_PRIORITY[taskToComplete.priority] ?? 0,
+          completedAt: new Date().toISOString(),
+        };
+
+        setCompletionEvents((previousEvents) => [
+          ...previousEvents,
+          completionEvent,
+        ]);
+      }
+    }
+
     setTasks((previousTasks) =>
       previousTasks.map((task) =>
         task.id === id
@@ -139,6 +184,17 @@ function Dashboard() {
         </section>
 
         <ProgressPanel tasks={tasks} />
+        <GoalStreakPanel
+          events={completionEvents}
+          tasks={tasks}
+          dailyGoal={dailyGoal}
+          onDailyGoalChange={setDailyGoal}
+        />
+        <AchievementPanel
+          events={completionEvents}
+          tasks={tasks}
+          dailyGoal={dailyGoal}
+        />
 
         <TaskForm
           key={editingTask?.id ?? "new-task"}
@@ -218,6 +274,8 @@ function Dashboard() {
             )}
           </div>
         </section>
+
+        <WeeklyProgress events={completionEvents} />
       </main>
 
       <footer className="site-footer">

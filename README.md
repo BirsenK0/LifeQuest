@@ -1,40 +1,61 @@
 # LifeQuest
 
-LifeQuest, günlük görevleri düzenlemek ve küçük ilerlemeleri takip etmek için hazırlanmış React uygulamasıdır. Görev tamamlandıkça XP kazanılır; görevler bu tarayıcıda saklanır.
+LifeQuest, günlük görevleri düzenlemeye ve kişisel ilerlemeyi takip etmeye yardımcı olan React tabanlı bir web uygulamasıdır. Görevler tamamlandıkça önceliklerine göre XP kazanılır; XP, seviye ilerlemesinde kullanılır.
 
 ## Özellikler
 
-- Görev ekleme, düzenleme, tamamlama ve silme
-- Kategori, öncelik ve duruma göre filtreleme; görev arama
-- Görev önceliğine göre XP ve her 100 XP'de seviye ilerlemesi
-- Tamamlanan görev, bugün tamamlanan görev ve başarı oranı özeti
-- Tarayıcı LocalStorage alanında kayıt
-- Telefon ve masaüstü ekranlarına uyumlu soft pembe tasarım
+- Görev ekleme, düzenleme, silme ve tamamlandı olarak işaretleme
+- Görevleri arama; kategori ve duruma göre filtreleme
+- Önceliğe göre XP kazanma ve her 100 XP'de seviye ilerlemesi
+- Günlük tamamlanan görev sayısı, toplam XP ve başarı oranı
+- Değiştirilebilir günlük görev hedefi ve ardışık gün serisi
+- İlk görev, günlük hedef, 7 günlük seri ve 100 XP rozetleri
+- Son haftaların gün gün görev ve XP grafiği
+- Görev, hedef ve ilerleme verilerini tarayıcıda saklama
+- Mobil ve masaüstü ekranlarına uyumlu soft pembe tasarım
 
-## Ekran görüntüsü
+## Kullanılan teknolojiler
 
-![LifeQuest dashboard](./screenshots/dashboard.png)
+- React ve JavaScript
+- Vite
+- HTML ve Pure CSS
+- Browser LocalStorage
 
-## Çalıştırma
+## Projeyi çalıştırma
 
-Node.js kurulu olmalıdır. Proje klasöründe terminal açıp şu komutları çalıştır:
+Bilgisayarda Node.js kurulu olmalıdır. Terminalde proje klasörüne geç:
 
 ```bash
+cd lifequest
 npm install
 npm run dev
 ```
 
-Terminalde gösterilen yerel adresi tarayıcıda aç. Üretim derlemesini kontrol etmek için:
+Terminalde gösterilen yerel adresi tarayıcıda aç.
+
+## Kontroller
+
+Kod kalitesi kontrolü ve yayın derlemesi için:
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## Veri hakkında
+Vite'ın yayın dosyaları `dist` klasörüne oluşturulur.
 
-Görevler yalnızca kullanıldıkları tarayıcının LocalStorage alanında tutulur. Tarayıcı verileri temizlenirse görevler silinir; başka cihazlarla eşitlenmez.
+## Ekran görüntüsü
+
+![LifeQuest dashboard](./screenshots/dashboard.png)
+
+## Veri saklama ve kapsam
+
+Görevler ve ilerleme bilgileri kullanıcının mevcut tarayıcısındaki LocalStorage alanında tutulur. Bu sürümde kullanıcı hesabı, cihazlar arası eşitleme veya arkadaşlarla çevrimiçi etkileşim bulunmaz.
 
 ## Netlify'da yayınlama
 
-GitHub deposunu Netlify'a bağladıktan sonra build komutunu `npm run build`, yayın klasörünü `dist` olarak ayarla. Uygulama yayımlandıktan sonra Netlify'ın verdiği bağlantıyı paylaşabilirsin.
+Netlify build ayarları:
+
+- Build command: `npm run build`
+- Publish directory: `dist`
+- Base directory: boş
